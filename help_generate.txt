@@ -1,0 +1,76 @@
+usage: generate.py [-h] [--no-progress-bar] [--log-interval N]
+                   [--log-format {json,none,simple,tqdm}] [--seed N] [--fp16]
+                   [--task TASK] [--skip-invalid-size-inputs-valid-test]
+                   [--max-tokens N] [--max-sentences N] [--gen-subset SPLIT]
+                   [--num-shards N] [--shard-id ID] [--path FILE]
+                   [--remove-bpe [REMOVE_BPE]] [--cpu] [--quiet] [--beam N]
+                   [--nbest N] [--max-len-a N] [--max-len-b N] [--min-len N]
+                   [--no-early-stop] [--unnormalized] [--no-beamable-mm]
+                   [--lenpen LENPEN] [--unkpen UNKPEN]
+                   [--replace-unk [REPLACE_UNK]] [--score-reference]
+                   [--prefix-size PS] [--sampling] [--sampling-topk PS]
+                   [--sampling-temperature N] [--print-alignment]
+                   [--model-overrides DICT]
+
+Facebook AI Research Sequence-to-Sequence Toolkit -- Generation
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --no-progress-bar     disable progress bar
+  --log-interval N      log progress every N batches (when progress bar is
+                        disabled)
+  --log-format {json,none,simple,tqdm}
+                        log format to use
+  --seed N              pseudo random number generator seed
+  --fp16                use FP16
+  --task TASK           task: translation, language_modeling (default:
+                        translation)
+
+Dataset and data loading:
+  --skip-invalid-size-inputs-valid-test
+                        ignore too long or too short lines in valid and test
+                        set
+  --max-tokens N        maximum number of tokens in a batch
+  --max-sentences N, --batch-size N
+                        maximum number of sentences in a batch
+  --gen-subset SPLIT    data subset to generate (train, valid, test)
+  --num-shards N        shard generation over N shards
+  --shard-id ID         id of the shard to generate (id < num_shards)
+
+Generation:
+  --path FILE           path(s) to model file(s), colon separated
+  --remove-bpe [REMOVE_BPE]
+                        remove BPE tokens before scoring
+  --cpu                 generate on CPU
+  --quiet               only print final scores
+  --beam N              beam size
+  --nbest N             number of hypotheses to output
+  --max-len-a N         generate sequences of maximum length ax + b, where x
+                        is the source length
+  --max-len-b N         generate sequences of maximum length ax + b, where x
+                        is the source length
+  --min-len N           minimum generation length
+  --no-early-stop       continue searching even after finalizing k=beam
+                        hypotheses; this is more correct, but increases
+                        generation time by 50%
+  --unnormalized        compare unnormalized hypothesis scores
+  --no-beamable-mm      don't use BeamableMM in attention layers
+  --lenpen LENPEN       length penalty: <1.0 favors shorter, >1.0 favors
+                        longer sentences
+  --unkpen UNKPEN       unknown word penalty: <0 produces more unks, >0
+                        produces fewer
+  --replace-unk [REPLACE_UNK]
+                        perform unknown replacement (optionally with alignment
+                        dictionary)
+  --score-reference     just score the reference translation
+  --prefix-size PS      initialize generation by target prefix of given length
+  --sampling            sample hypotheses instead of using beam search
+  --sampling-topk PS    sample from top K likely next words instead of all
+                        words
+  --sampling-temperature N
+                        temperature for random sampling
+  --print-alignment     if set, uses attention feedback to compute and print
+                        alignment to source tokens
+  --model-overrides DICT
+                        a dictionary used to override model args at generation
+                        that were used during model training

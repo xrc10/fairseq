@@ -303,6 +303,8 @@ def add_generation_args(parser):
                        help='if set, uses attention feedback to compute and print alignment to source tokens')
     group.add_argument('--model-overrides', default="{}", type=str, metavar='DICT',
                        help='a dictionary used to override model args at generation that were used during model training')
+    group.add_argument('--output-path', default=None, type=str,
+                       help='path to the output file')
     return group
 
 

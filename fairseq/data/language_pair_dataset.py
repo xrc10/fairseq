@@ -121,8 +121,10 @@ class LanguagePairDataset(FairseqDataset):
     def ordered_indices(self):
         """Ordered indices for batching."""
         if self.shuffle:
+            print("shuffle")
             indices = np.random.permutation(len(self))
         else:
+            print("not shuffle")
             indices = np.arange(len(self))
         if self.tgt_sizes is not None:
             indices = indices[np.argsort(self.tgt_sizes[indices], kind='mergesort')]

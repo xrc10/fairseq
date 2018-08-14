@@ -29,7 +29,7 @@ def main(args):
 
     # Load dataset splits
     task = tasks.setup_task(args)
-    task.load_dataset(args.gen_subset)
+    task.load_dataset(args.gen_subset, shuffle=False)
     print('| {} {} {} examples'.format(args.data, args.gen_subset, len(task.dataset(args.gen_subset))))
 
     # Set dictionaries
@@ -52,6 +52,8 @@ def main(args):
     # Load alignment dictionary for unknown word replacement
     # (None if no unknown word replacement, empty if no path to align dictionary)
     align_dict = utils.load_align_dict(args.replace_unk)
+
+
 
     # Load dataset (possibly sharded)
     itr = data.EpochBatchIterator(
@@ -84,6 +86,7 @@ def main(args):
     scorer = bleu.Scorer(tgt_dict.pad(), tgt_dict.eos(), tgt_dict.unk())
     num_sentences = 0
     has_target = True
+    res = []
     with progress_bar.build_progress_bar(args, itr) as t:
         if args.score_reference:
             translations = translator.score_batched_itr(t, cuda=use_cuda, timer=gen_timer)
@@ -124,6 +127,8 @@ def main(args):
                     remove_bpe=args.remove_bpe,
                 )
 
+                res.append((sample_id.item(), hypo_str))
+
                 if not args.quiet:
                     print('H-{}\t{}\t{}'.format(sample_id, hypo['score'], hypo_str))
                     print('P-{}\t{}'.format(
@@ -151,6 +156,12 @@ def main(args):
             wps_meter.update(src_tokens.size(0))
             t.log({'wps': round(wps_meter.avg)})
             num_sentences += 1
+
+    if args.output_path is not None:
+        out = open(args.output_path, 'w')
+        res = sorted(res)
+        for r in res:
+            out.write(r[1] + '\n')
 
     print('| Translated {} sentences ({} tokens) in {:.1f}s ({:.2f} sentences/s, {:.2f} tokens/s)'.format(
         num_sentences, gen_timer.n, gen_timer.sum, num_sentences / gen_timer.sum, 1. / gen_timer.avg))

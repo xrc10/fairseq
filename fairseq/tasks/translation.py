@@ -69,7 +69,7 @@ class TranslationTask(FairseqTask):
 
         return cls(args, src_dict, tgt_dict)
 
-    def load_dataset(self, split, combine=False):
+    def load_dataset(self, split, combine=False, shuffle=True):
         """Load a dataset split."""
 
         def split_exists(split, src, tgt, lang):
@@ -125,7 +125,6 @@ class TranslationTask(FairseqTask):
             src_sizes = np.concatenate([ds.sizes for ds in src_datasets])
             tgt_sizes = np.concatenate([ds.sizes for ds in tgt_datasets])
 
-
         self.datasets[split] = LanguagePairDataset(
             src_dataset, src_sizes, self.src_dict,
             tgt_dataset, tgt_sizes, self.tgt_dict,
@@ -133,6 +132,7 @@ class TranslationTask(FairseqTask):
             left_pad_target=self.args.left_pad_target,
             max_source_positions=self.args.max_source_positions,
             max_target_positions=self.args.max_target_positions,
+            shuffle=shuffle,
         )
 
     @property
