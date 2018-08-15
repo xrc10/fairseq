@@ -184,7 +184,7 @@ class Trainer(object):
         else:
             return None  # buffering updates
 
-    def _forward(self, sample, eval=False):
+    def _forward(self, sample, eval=False): # where the loss is computed
         loss = None
         sample_size = 0
         logging_output = {
