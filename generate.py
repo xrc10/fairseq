@@ -127,7 +127,7 @@ def main(args):
                     remove_bpe=args.remove_bpe,
                 )
 
-                res.append((sample_id.item(), hypo_str))
+                res.append((sample_id.item(), hypo_str, hypo['score']))
 
                 if not args.quiet:
                     print('H-{}\t{}\t{}'.format(sample_id, hypo['score'], hypo_str))
@@ -161,7 +161,10 @@ def main(args):
         out = open(args.output_path, 'w')
         res = sorted(res)
         for r in res:
-            out.write(r[1] + '\n')
+            if args.score_reference:
+                out.write("{} ||| {:.4f}\n".format(r[1], r[2]))
+            else:
+                out.write(r[1] + '\n')
 
     print('| Translated {} sentences ({} tokens) in {:.1f}s ({:.2f} sentences/s, {:.2f} tokens/s)'.format(
         num_sentences, gen_timer.n, gen_timer.sum, num_sentences / gen_timer.sum, 1. / gen_timer.avg))
